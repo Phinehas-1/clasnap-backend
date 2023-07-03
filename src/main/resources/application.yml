@@ -1,12 +1,12 @@
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:1543/clasnapp
-        user: postgres
+        url: jdbc:postgresql://localhost:5432/clasnapp
+        username: postgres
         password: password
     jpa:
         hibernate:
-            show-sql: true
-            ddl-auto: update
+            ddl-auto: create-drop        
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: true
