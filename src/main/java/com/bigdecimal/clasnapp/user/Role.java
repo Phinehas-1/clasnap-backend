@@ -23,6 +23,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)

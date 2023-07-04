@@ -23,7 +23,10 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false)
     private UUID id;
+
+    //TODO Add username property. Value will be generated in service class.
 
     @Column(nullable = false)
     private String firstName;

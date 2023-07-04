@@ -15,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,12 +27,14 @@ import lombok.Setter;
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private GroupName name;
 
+    @OneToOne
     private User leader;
 
     @OneToMany(mappedBy = "group")
