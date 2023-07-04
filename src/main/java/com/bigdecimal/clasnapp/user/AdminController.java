@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bigdecimal.clasnapp.group.Group;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class UserController implements Controller {
+public class AdminController implements Controller {
 
-    private final RegistrationService registrationService;
+    private final AdminService registrationService;
 
     @PostMapping("/users")
     public ResponseEntity<?> createUsers(@RequestBody List<User> users) {
@@ -43,8 +45,7 @@ public class UserController implements Controller {
     @Override
     public ResponseEntity<?> updateUserRole(@PathVariable("userId") String userId,
             @RequestParam("roleName") String roleName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUserRole'");
+        return ResponseEntity.status(HttpStatus.OK).body(registrationService.updateUserRole(userId, roleName));
     }
 
     @PutMapping("/user/group/{userId}")
@@ -52,6 +53,12 @@ public class UserController implements Controller {
     public ResponseEntity<?> updateUserGroup(@PathVariable("userId") String userId, @RequestParam("groupName") String groupName) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateUserGroup'");
+    }
+
+    @Override
+    public ResponseEntity<?> updateGroupProfile(String groupId, Group group) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateGroupProfile'");
     }
 
 }

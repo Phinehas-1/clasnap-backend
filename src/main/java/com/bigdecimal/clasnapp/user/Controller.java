@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bigdecimal.clasnapp.group.Group;
+
 public interface Controller {
     ResponseEntity<?> createUsers(@RequestBody List<User> users);
 
@@ -17,4 +19,7 @@ public interface Controller {
     ResponseEntity<?> updateUserRole(@PathVariable String userId, @RequestParam String roleName);
 
     ResponseEntity<?> updateUserGroup(@PathVariable String userId, @RequestParam String roleName);
+
+    ResponseEntity<?> updateGroupProfile(@PathVariable String groupId, @RequestBody Group group);
+
 }
