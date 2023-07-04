@@ -3,6 +3,7 @@ package com.bigdecimal.clasnapp.user;
 import java.util.UUID;
 
 import com.bigdecimal.clasnapp.group.Group;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,10 +36,12 @@ public class User {
     private String lastName;
 
     @ManyToOne
+    @JsonIgnore
     private Role role;
 
     @ManyToOne
-    private Group group; // attempt fetch group using user
+    @JsonIgnore
+    private Group group;
 
     public User(Role role) {
         this.role = role;
