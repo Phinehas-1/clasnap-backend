@@ -3,6 +3,7 @@ package com.bigdecimal.clasnapp.user;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +26,7 @@ public class Role {
     private UUID id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RoleName name;
 
     @OneToMany(mappedBy = "role")
