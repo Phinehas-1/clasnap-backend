@@ -25,8 +25,8 @@ public class AdminController implements Controller {
     private final AdminService registrationService;
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUsers(@RequestBody List<User> users) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.createUsers(users));
+    public ResponseEntity<?> createUsers(@RequestBody List<UserDto> userDtos) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.createUsers(userDtos));
     }
 
     @DeleteMapping("/users")

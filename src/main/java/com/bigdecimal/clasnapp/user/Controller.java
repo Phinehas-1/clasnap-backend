@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bigdecimal.clasnapp.group.Group;
 
 public interface Controller {
-    ResponseEntity<?> createUsers(@RequestBody List<User> users);
+    ResponseEntity<?> createUsers(@RequestBody List<UserDto> userDtos);
 
     ResponseEntity<?> deleteUsers(@RequestBody List<User> users);
 
