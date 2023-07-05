@@ -54,8 +54,7 @@ public class AdminController implements Controller {
     @Override
     public ResponseEntity<?> updateUserGroup(@PathVariable("userId") String userId,
             @RequestParam("groupName") String groupName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUserGroup'");
+        return ResponseEntity.status(HttpStatus.OK).body(registrationService.updateUserGroup(userId, groupName));
     }
 
     @PutMapping("/groups/{groupId}/profile")
