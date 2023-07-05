@@ -29,7 +29,7 @@ public class Report {
     @OneToOne
     private User user;
 
-    @Column(name = "submittedAt", nullable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "submittedAt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date submittedAt;
 
     /* This will be a combination of the term name + week name */

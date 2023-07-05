@@ -6,12 +6,14 @@ import java.util.UUID;
 
 import com.bigdecimal.clasnapp.report.Report;
 import com.bigdecimal.clasnapp.report.student.Student;
+import com.bigdecimal.clasnapp.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -27,6 +29,9 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)
     private UUID id;
+
+    @ManyToOne
+    private User user;
 
     /* This will be a combination of the term name + week name */
     @Column(nullable = false)
