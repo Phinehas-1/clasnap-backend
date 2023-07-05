@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import com.bigdecimal.clasnapp.group.Group;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController implements Controller {
 
@@ -34,27 +36,29 @@ public class AdminController implements Controller {
         throw new UnsupportedOperationException("Unimplemented method 'deleteUsers'");
     }
 
-    @PutMapping("/user/profile/{userId}")
+    @PutMapping("/users/{userId}/profile")
     @Override
     public ResponseEntity<?> updateUserProfile(@PathVariable("userId") String userId, @RequestBody User user) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateUserProfile'");
     }
 
-    @PutMapping("/user/role/{userId}")
+    @PutMapping("/users/{userId}/role")
     @Override
     public ResponseEntity<?> updateUserRole(@PathVariable("userId") String userId,
             @RequestParam("roleName") String roleName) {
         return ResponseEntity.status(HttpStatus.OK).body(registrationService.updateUserRole(userId, roleName));
     }
 
-    @PutMapping("/user/group/{userId}")
+    @PutMapping("/users/{userId}/group")
     @Override
-    public ResponseEntity<?> updateUserGroup(@PathVariable("userId") String userId, @RequestParam("groupName") String groupName) {
+    public ResponseEntity<?> updateUserGroup(@PathVariable("userId") String userId,
+            @RequestParam("groupName") String groupName) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateUserGroup'");
     }
 
+    @PutMapping("/groups/{groupId}/profile")
     @Override
     public ResponseEntity<?> updateGroupProfile(String groupId, Group group) {
         // TODO Auto-generated method stub
