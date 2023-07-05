@@ -1,15 +1,16 @@
 package com.bigdecimal.clasnapp.user;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.bigdecimal.clasnapp.group.Group;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -35,16 +36,19 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToOne
-    @JsonIgnore
-    private Role role;
+    @ManyToMany
+    private List<Role> roles;
 
     @ManyToOne
-    @JsonIgnore
     private Group group;
 
-    public User(Role role) {
-        this.role = role;
+    public User(String firstName, String lastName, List<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.roles = roles;
     }
+
+
+    
 
 }
