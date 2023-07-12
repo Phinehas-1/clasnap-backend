@@ -7,6 +7,7 @@ import com.bigdecimal.clasnapp.group.Group;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,14 +22,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)
     private UUID id;
-
-    //TODO Add username property. Value will be generated in service class.
 
     @Column(nullable = false)
     private String firstName;
@@ -36,17 +35,27 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToMany
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Group group;
 
-    public User(String firstName, String lastName, List<Role> roles) {
+    public User(String firstName, String lastName, String username, String password, List<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
         this.roles = roles;
+        this.username = username;
     }
+
+    
 
 
     
