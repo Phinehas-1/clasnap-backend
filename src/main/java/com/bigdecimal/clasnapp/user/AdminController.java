@@ -15,16 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bigdecimal.clasnapp.group.Group;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@Tag(name = "User Management")
 public class AdminController implements Controller {
 
     private final AdminService registrationService;
 
     @PostMapping("/users")
+    @Operation(
+        description = "POST endpoint for creating a user or list of users."
+    )
     public ResponseEntity<?> createUsers(@RequestBody List<UserDto> userDtos) {
         return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.createUsers(userDtos));
     }
