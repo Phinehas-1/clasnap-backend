@@ -38,4 +38,10 @@ public class Student {
         this.name = name;
         this.laptop = laptop;
     }
+
+    public Student(String name, Boolean laptop, Long score) {
+        this.name = name;
+        this.laptop = laptop;
+        this.score = score;
+    }
 }
