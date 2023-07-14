@@ -1,6 +1,6 @@
 package com.bigdecimal.clasnapp.report;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import com.bigdecimal.clasnapp.report.attendance.Attendance;
@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,18 +28,21 @@ public class Report {
     @Column(updatable = false)
     UUID id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn
     private User user;
 
-    @Column(name = "submittedAt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date submittedAt;
+    @Column(name = "submittedOn", nullable = false)
+    private Timestamp submittedOn;
 
-    /* This will be a combination of the term name + week name */
+    //TODO This will be a combination of the term name + week name.
     @Column(nullable = false)
     private String week;
 
+    @Column(nullable = false)
     private String topic;
 
+    @Column(nullable = false)
     private String summary;
 
     @OneToOne
@@ -48,5 +53,5 @@ public class Report {
         this.week = week;
         this.topic = topic;
         this.summary = summary;
-    }  
+    }
 }
