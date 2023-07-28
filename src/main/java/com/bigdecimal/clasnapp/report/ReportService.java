@@ -1,14 +1,18 @@
 package com.bigdecimal.clasnapp.report;
 
-import com.bigdecimal.clasnapp.group.Group;
-import com.bigdecimal.clasnapp.report.attendance.Attendance;
-import com.bigdecimal.clasnapp.report.attendance.AttendanceDto;
-import com.bigdecimal.clasnapp.report.attendance.AttendanceRepository;
-import com.bigdecimal.clasnapp.report.student.Student;
-import com.bigdecimal.clasnapp.report.student.StudentDto;
-import com.bigdecimal.clasnapp.report.student.StudentRepository;
-import com.bigdecimal.clasnapp.user.User;
-import com.bigdecimal.clasnapp.user.UserRepository;
+import com.bigdecimal.clasnapp.domain.Attendance;
+import com.bigdecimal.clasnapp.domain.AttendanceDto;
+import com.bigdecimal.clasnapp.domain.AttendanceRepository;
+import com.bigdecimal.clasnapp.domain.Group;
+import com.bigdecimal.clasnapp.domain.Report;
+import com.bigdecimal.clasnapp.domain.ReportDto;
+import com.bigdecimal.clasnapp.domain.ReportRepository;
+import com.bigdecimal.clasnapp.domain.Student;
+import com.bigdecimal.clasnapp.domain.StudentDto;
+import com.bigdecimal.clasnapp.domain.StudentRepository;
+import com.bigdecimal.clasnapp.domain.User;
+import com.bigdecimal.clasnapp.domain.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;

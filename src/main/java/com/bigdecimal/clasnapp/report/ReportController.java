@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bigdecimal.clasnapp.report.attendance.AttendanceDto;
-import com.bigdecimal.clasnapp.report.student.StudentDto;
+import com.bigdecimal.clasnapp.domain.AttendanceDto;
+import com.bigdecimal.clasnapp.domain.ReportDto;
+import com.bigdecimal.clasnapp.domain.StudentDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

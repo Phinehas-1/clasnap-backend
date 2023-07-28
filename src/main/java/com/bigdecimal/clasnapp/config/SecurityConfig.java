@@ -1,6 +1,9 @@
 package com.bigdecimal.clasnapp.config;
 
-import com.bigdecimal.clasnapp.JwtService;
+import com.bigdecimal.clasnapp.auth.AuthenticationFilter;
+import com.bigdecimal.clasnapp.auth.AuthorizationFilter;
+import com.bigdecimal.clasnapp.util.JwtService;
+
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

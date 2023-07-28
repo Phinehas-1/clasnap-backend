@@ -9,12 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bigdecimal.clasnapp.group.Group;
-import com.bigdecimal.clasnapp.group.GroupName;
-import com.bigdecimal.clasnapp.group.GroupRepository;
-import com.bigdecimal.clasnapp.user.Role;
-import com.bigdecimal.clasnapp.user.RoleName;
-import com.bigdecimal.clasnapp.user.RoleRepository;
+import com.bigdecimal.clasnapp.domain.Group;
+import com.bigdecimal.clasnapp.domain.GroupName;
+import com.bigdecimal.clasnapp.domain.GroupRepository;
+import com.bigdecimal.clasnapp.domain.Role;
+import com.bigdecimal.clasnapp.domain.RoleName;
+import com.bigdecimal.clasnapp.domain.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
