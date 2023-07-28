@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Tag(name = "User Management")
+@Tag(name = "Admin")
 public class AdminController implements Controller {
 
     private final AdminService registrationService;
