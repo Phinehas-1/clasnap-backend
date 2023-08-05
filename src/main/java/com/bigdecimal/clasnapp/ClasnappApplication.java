@@ -63,7 +63,7 @@ public class ClasnappApplication {
 	private void initializeGroups(GroupRepository groups) {
 		List<Group> groupList = groups.findAll();
 		log.info("Number of existent groups is {}", groupList.size());
-		if (groupList.size() < 4) {
+		if (groupList.size() < 12) {
 			Group year1 = groups.findByName(GroupName.YEAR_1).orElse(new Group(GroupName.YEAR_1));
 			Group year2 = groups.findByName(GroupName.YEAR_2).orElse(new Group(GroupName.YEAR_2));
 			Group year3 = groups.findByName(GroupName.YEAR_3).orElse(new Group(GroupName.YEAR_3));
