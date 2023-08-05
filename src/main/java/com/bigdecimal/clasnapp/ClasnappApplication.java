@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bigdecimal.clasnapp.domain.Group;
 import com.bigdecimal.clasnapp.domain.GroupName;
@@ -31,6 +33,16 @@ public class ClasnappApplication {
 		return arg -> {
 			initializeRoles(roles);
 			initializeGroups(groups);
+		};
+	}
+
+	@Bean
+	WebMvcConfigurer webMvcConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("*");
+			}
 		};
 	}
 
