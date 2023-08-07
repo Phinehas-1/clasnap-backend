@@ -36,7 +36,7 @@ public class AdminService {
     private final GroupRepository groups;
     private final PasswordEncoder passwordEncoder;
     // elevatedRole is {RoleName.MD, RoleName.SUPERVISOR}
-    private Boolean userHasElevateRole = false;
+    private Boolean userHasElevatedRole = false;
     List<User> userList = new ArrayList<User>();
 
     @Transactional
@@ -57,10 +57,12 @@ public class AdminService {
             // SUPERVISOR role(s).
             roleList.stream().forEach(role -> {
                 if (role.getName().equals(RoleName.MD) || role.getName().equals(RoleName.SUPERVISOR)) {
-                    userHasElevateRole = true;
+                    userHasElevatedRole = true;
+                    return;
                 }
+                userHasElevatedRole = false;
             });
-            if (!userHasElevateRole) {
+            if (!userHasElevatedRole) {
                 if (userDto.groupName() == null) {
                     throw new IllegalStateException(
                             "User without role {MD, SUPERVISOR} must be assigned a group at registration.");
