@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "_group")
+@Table(name = "groups")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
