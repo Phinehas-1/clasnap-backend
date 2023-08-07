@@ -37,11 +37,12 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     // elevatedRole is {RoleName.MD, RoleName.SUPERVISOR}
     private Boolean userHasElevatedRole = false;
-    List<User> userList = new ArrayList<User>();
+    List<User> userList;
 
     @Transactional
     public List<User> createUsers(List<UserDto> userDtos) {
         Long startTime = System.currentTimeMillis();
+        userList = new ArrayList<User>();
         userDtos.stream().forEach(userDto -> {
             // create user and assign role(s) to the user.
             List<Role> roleList = userDto.roleNames().stream().map(roleName -> RoleName.valueOf(roleName))
