@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestControllerAdvice
 public class AppExceptionHandler {
 
@@ -14,10 +16,10 @@ public class AppExceptionHandler {
                 .body("Object is null. [" + npex.getCause() + "]");
     }
 
-    // @ExceptionHandler(EntityNotFoundException.class)
-    // public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException enfex) {
-    //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Entity not found. [" + enfex.getCause() + "]");
-    // }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException enfex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Entity not found. [" + enfex.getCause() + "]");
+    }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException nfex) {
@@ -32,7 +34,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException iaex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Argument is illegal. [" + iaex.getMessage() + "]");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(iaex.getMessage());
     }
     
     @ExceptionHandler(InvalidUserDetailsException.class)

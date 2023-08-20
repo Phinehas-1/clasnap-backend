@@ -3,6 +3,9 @@ package com.bigdecimal.clasnapp.domain;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,26 +25,34 @@ import lombok.Setter;
 @Entity
 @Table(name = "users")
 public class User {
+    @JsonProperty("User ID")
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)
     private UUID id;
 
+    @JsonProperty("First Name")
     @Column(nullable = false)
     private String firstName;
     
+     @JsonProperty("Last Name")
     @Column(nullable = false)
-    private String lastName;
+     private String lastName;
 
+     @JsonProperty("Username")
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
+    
+     @JsonProperty("Roles")
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+     private List<Role> roles;
 
+     @JsonProperty("Group")
     @ManyToOne(fetch = FetchType.EAGER)
     private Group group;
 

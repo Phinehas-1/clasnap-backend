@@ -2,6 +2,8 @@ package com.bigdecimal.clasnapp.domain;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,6 +21,7 @@ import lombok.Setter;
 @Entity
 public class Role {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)

@@ -1,8 +1,17 @@
 package com.bigdecimal.clasnapp.auth;
 
+import com.bigdecimal.clasnapp.domain.LoginDto;
+import com.bigdecimal.clasnapp.exception.InvalidUserDetailsException;
+import com.bigdecimal.clasnapp.util.JwtService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,42 +19,23 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.bigdecimal.clasnapp.domain.LoginDto;
-import com.bigdecimal.clasnapp.exception.InvalidUserDetailsException;
-import com.bigdecimal.clasnapp.util.JwtService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
+  private LoginDto loginDto;
 
   @Override
   public Authentication attemptAuthentication(
     HttpServletRequest request,
     HttpServletResponse response
   ) throws AuthenticationException {
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      LoginDto loginDto = mapper.readValue(request.getReader(), LoginDto.class);
-      return authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-          loginDto.username(),
-          loginDto.password()
-        )
-      );
-    } catch (IOException e) {
-      throw new InvalidUserDetailsException(e.getMessage());
-    }
+    String userParams[] = getUserParamsFromRequestBody(request);
+    return authenticationManager.authenticate(
+      new UsernamePasswordAuthenticationToken(userParams[0], userParams[1])
+    );
   }
 
   @Override
@@ -55,19 +45,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     FilterChain chain,
     Authentication authResult
   ) throws IOException, ServletException {
-    log.info("successfulAuthentication(). Authentication was successful.");
     User user = (User) authResult.getPrincipal();
-    response.setContentType("application/json;charset=utf-8");
     String accessToken = jwtService.accessToken(user);
+    response.setContentType("application/json;charset=utf-8");
     try (PrintWriter out = response.getWriter()) {
       out.print(String.format("{\"accessToken\":\"%s\"}", accessToken));
     } catch (Exception e) {
-      log.error(
-        "failed to print object into respone body because {}",
-        e.getCause()
-      );
       response.setHeader("access_token", accessToken);
     }
+    log.info("User [ {} ] authenticated successfully.", user.getUsername());
   }
 
   @Override
@@ -76,6 +62,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     HttpServletResponse response,
     AuthenticationException failed
   ) throws IOException, ServletException {
-    log.error("Authentication failed.");
+    response.setStatus(401);
+    log.info("Authentication failed for username [ {} ].", loginDto.username());
+  }
+
+  private String[] getUserParamsFromRequestBody(HttpServletRequest request) {
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      loginDto = mapper.readValue(request.getReader(), LoginDto.class);
+    } catch (Exception e) {
+      throw new InvalidUserDetailsException("Read user login details failed.");
+    }
+    return new String[] { loginDto.username(), loginDto.password() };
   }
 }

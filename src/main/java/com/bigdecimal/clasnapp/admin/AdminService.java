@@ -45,15 +45,12 @@ public class AdminService {
         userList = new ArrayList<User>();
         userDtos.stream().forEach(userDto -> {
             // create user and assign role(s) to the user.
-            List<Role> roleList = userDto.roleNames().stream().map(roleName -> RoleName.valueOf(roleName))
-                    .toList().stream().map(r -> {
-                        return roles.findByName(r).orElseThrow(() -> {
-                            return new NotFoundException(
-                                    String.format("find role [%s] in role table failed.", r.name()));
-                        });
-                    }).toList();
-            User user = new User(userDto.firstName(), userDto.lastName(), username(userDto.firstName()),
-                    passwordEncoder.encode(userDto.password()), roleList);
+            List<Role> roleList = userDto.roleNames().stream().map(roleName -> RoleName.valueOf(roleName)).toList().stream().map(r -> {
+                return roles.findByName(r).orElseThrow(() -> {
+                    return new NotFoundException(String.format("find role [%s] in role table failed.", r.name()));
+                });
+            }).toList();
+            User user = new User(userDto.firstName(), userDto.lastName(), username(userDto.firstName()), passwordEncoder.encode(userDto.password()), roleList);
             // assign group to the user except in the case the user has any of MD or
             // SUPERVISOR role(s).
             roleList.stream().forEach(role -> {
@@ -65,14 +62,11 @@ public class AdminService {
             });
             if (!userHasElevatedRole) {
                 if (userDto.groupName() == null) {
-                    throw new IllegalStateException(
-                            "User without role {MD, SUPERVISOR} must be assigned a group at registration.");
+                    throw new IllegalStateException("User without role {MD, SUPERVISOR} must be assigned a group at registration.");
                 }
-                Group group = groups.findByName(GroupName.valueOf(userDto.groupName()))
-                        .orElseThrow(() -> {
-                            return new NotFoundException(
-                                    String.format("find group [%s] in group table failed.", userDto.groupName()));
-                        });
+                Group group = groups.findByName(GroupName.valueOf(userDto.groupName())).orElseThrow(() -> {
+                    return new NotFoundException(String.format("find group [%s] in group table failed.", userDto.groupName()));
+                });
                 user.setGroup(group);
             }
             // add the newly created user to the list of users to be saved.
@@ -80,11 +74,15 @@ public class AdminService {
         });
         userList = users.saveAll(userList);
         Long timeTaken = System.currentTimeMillis() - startTime;
-        log.info("Users {} created successfully in {} ms", userList.stream().map(user -> user.getUsername()).toList(),
-                timeTaken);
+        log.info("Users {} created successfully in {} ms", userList.stream().map(user -> user.getUsername()).toList(), timeTaken);
         return userList;
     }
 
+    @Transactional
+    public List<User> getAllUsers() {
+        return users.findAll();
+    }
+    
     @Transactional
     public User updateUserRole(String userId, String roleName) {
         Role role = roles.findByName(RoleName.valueOf(roleName)).orElseThrow(EntityNotFoundException::new);

@@ -1,12 +1,8 @@
 package com.bigdecimal.clasnapp.config;
 
-import com.bigdecimal.clasnapp.auth.AuthenticationFilter;
-import com.bigdecimal.clasnapp.auth.AuthorizationFilter;
-import com.bigdecimal.clasnapp.util.JwtService;
-
+import java.time.Duration;
 import java.util.Arrays;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +18,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.bigdecimal.clasnapp.auth.AuthenticationFilter;
+import com.bigdecimal.clasnapp.auth.AuthorizationFilter;
+import com.bigdecimal.clasnapp.util.JwtService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
@@ -76,6 +82,9 @@ public class SecurityConfig {
       authorizationFilter,
       UsernamePasswordAuthenticationFilter.class
     );
+    security.cors(customizer -> {
+      customizer.configurationSource(corsConfigurationSource());
+    });
     return security.build();
   }
 
@@ -85,6 +94,19 @@ public class SecurityConfig {
     daoAuthenticationProvider.setUserDetailsService(userDetailsService);
     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
     return daoAuthenticationProvider;
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList(CorsConfiguration.ALL));
+    configuration.setAllowedMethods(Arrays.asList(CorsConfiguration.ALL));
+    configuration.setMaxAge(Duration.ofMinutes(60));
+    configuration.setAllowedHeaders(Arrays.asList(CorsConfiguration.ALL));
+    configuration.setExposedHeaders(Arrays.asList(CorsConfiguration.ALL));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 
   @Bean

@@ -26,6 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "groups")
 public class Group {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)
