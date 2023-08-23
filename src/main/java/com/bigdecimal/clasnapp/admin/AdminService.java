@@ -84,9 +84,9 @@ public class AdminService {
     }
     
     @Transactional
-    public User updateUserRole(String userId, String roleName) {
+    public User updateUserRole(String username, String roleName) {
         Role role = roles.findByName(RoleName.valueOf(roleName)).orElseThrow(EntityNotFoundException::new);
-        User user = users.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
+        User user = users.findByUsername(username).orElseThrow(EntityNotFoundException::new);
         List<Role> roleList = user.getRoles();
         roleList.add(role);
         user.setRoles(roleList);
@@ -94,9 +94,9 @@ public class AdminService {
     }
 
     @Transactional
-    public User updateUserGroup(String userId, String groupName) {
+    public User updateUserGroup(String username, String groupName) {
         Group group = groups.findByName(GroupName.valueOf(groupName)).orElseThrow(EntityNotFoundException::new);
-        User user = users.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
+        User user = users.findByUsername(username).orElseThrow(EntityNotFoundException::new);
         user.setGroup(group);
         return users.save(user);
     }

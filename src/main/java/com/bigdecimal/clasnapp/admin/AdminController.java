@@ -9,7 +9,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,26 +67,26 @@ public class AdminController implements Controller {
     );
   }
 
-  @PutMapping("/users/{userId}/role")
+  @PutMapping("/users/{username}/role")
   @Override
   public ResponseEntity<?> updateUserRole(
-    @PathVariable("userId") String userId,
+    @PathVariable("username") String username,
     @RequestParam("roleName") String roleName
   ) {
     return ResponseEntity
       .status(HttpStatus.OK)
-      .body(registrationService.updateUserRole(userId, roleName));
+      .body(registrationService.updateUserRole(username, roleName));
   }
 
-  @PutMapping("/users/{userId}/group")
+  @PutMapping("/users/{username}/group")
   @Override
   public ResponseEntity<?> updateUserGroup(
-    @PathVariable("userId") String userId,
+    @PathVariable("username") String username,
     @RequestParam("groupName") String groupName
   ) {
     return ResponseEntity
       .status(HttpStatus.OK)
-      .body(registrationService.updateUserGroup(userId, groupName));
+      .body(registrationService.updateUserGroup(username, groupName));
   }
 
   // @PutMapping("/groups/{groupId}/profile")
