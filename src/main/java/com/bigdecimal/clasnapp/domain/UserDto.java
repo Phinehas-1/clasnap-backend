@@ -9,13 +9,5 @@ public record UserDto(String firstName, String lastName, String password, List<S
         this.password = password;
         this.roleNames = roleNames;
         this.groupName = groupName;
-
-        if (roleNames == null || roleNames.isEmpty()) {
-            throw new IllegalArgumentException("User must be assigned a role.");
-        }
-
-        if (firstName == null || firstName.trim().isEmpty()) {
-            throw new IllegalArgumentException("First name must be assigned to the user.");
-        }
     }
 }
