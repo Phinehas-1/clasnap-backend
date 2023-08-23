@@ -47,7 +47,7 @@ public class AdminController implements Controller {
       .body(registrationService.getAllUsers());
   }
 
-  @DeleteMapping("/users")
+  // @DeleteMapping("/users")
   @Override
   public ResponseEntity<?> deleteUsers(@RequestBody List<User> users) {
     // TODO Auto-generated method stub
@@ -56,7 +56,7 @@ public class AdminController implements Controller {
     );
   }
 
-  @PutMapping("/users/{userId}/profile")
+  // @PutMapping("/users/{userId}/profile")
   @Override
   public ResponseEntity<?> updateUserProfile(
     @PathVariable("userId") String userId,
@@ -90,7 +90,7 @@ public class AdminController implements Controller {
       .body(registrationService.updateUserGroup(userId, groupName));
   }
 
-  @PutMapping("/groups/{groupId}/profile")
+  // @PutMapping("/groups/{groupId}/profile")
   @Override
   public ResponseEntity<?> updateGroupProfile(String groupId, Group group) {
     // TODO Auto-generated method stub
