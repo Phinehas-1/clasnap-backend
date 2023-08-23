@@ -1,12 +1,7 @@
 package com.bigdecimal.clasnapp.admin;
 
-import com.bigdecimal.clasnapp.domain.Group;
-import com.bigdecimal.clasnapp.domain.User;
-import com.bigdecimal.clasnapp.domain.UserDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,14 +10,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.bigdecimal.clasnapp.domain.Group;
+import com.bigdecimal.clasnapp.domain.User;
+import com.bigdecimal.clasnapp.domain.UserDto;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Tag(name = "Admin")
-public class AdminController implements Controller {
+public class AdminController {
 
   private final AdminService registrationService;
 
@@ -37,9 +39,7 @@ public class AdminController implements Controller {
   }
 
   @GetMapping("/users")
-  @Operation(
-    description = "GET endpoint for fetching all the users."
-  )
+  @Operation(description = "GET endpoint for fetching all the users.")
   public ResponseEntity<?> getAllUsers() {
     return ResponseEntity
       .status(HttpStatus.OK)
@@ -47,7 +47,6 @@ public class AdminController implements Controller {
   }
 
   // @DeleteMapping("/users")
-  @Override
   public ResponseEntity<?> deleteUsers(@RequestBody List<User> users) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException(
@@ -56,7 +55,6 @@ public class AdminController implements Controller {
   }
 
   // @PutMapping("/users/{userId}/profile")
-  @Override
   public ResponseEntity<?> updateUserProfile(
     @PathVariable("userId") String userId,
     @RequestBody User user
@@ -67,30 +65,17 @@ public class AdminController implements Controller {
     );
   }
 
-  @PutMapping("/users/{username}/role")
-  @Override
-  public ResponseEntity<?> updateUserRole(
+  @PutMapping("/users/{username}")
+  public ResponseEntity<?> updateUserByUsername(
     @PathVariable("username") String username,
-    @RequestParam("roleName") String roleName
+    @RequestBody UserDto userDto
   ) {
     return ResponseEntity
       .status(HttpStatus.OK)
-      .body(registrationService.updateUserRole(username, roleName));
-  }
-
-  @PutMapping("/users/{username}/group")
-  @Override
-  public ResponseEntity<?> updateUserGroup(
-    @PathVariable("username") String username,
-    @RequestParam("groupName") String groupName
-  ) {
-    return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(registrationService.updateUserGroup(username, groupName));
+      .body(registrationService.updateUserByUsername(username, userDto));
   }
 
   // @PutMapping("/groups/{groupId}/profile")
-  @Override
   public ResponseEntity<?> updateGroupProfile(String groupId, Group group) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException(
