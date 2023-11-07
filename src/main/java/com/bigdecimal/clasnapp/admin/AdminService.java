@@ -1,5 +1,8 @@
 package com.bigdecimal.clasnapp.admin;
 
+import com.bigdecimal.clasnapp.domain.Calendar;
+import com.bigdecimal.clasnapp.domain.CalendarDto;
+import com.bigdecimal.clasnapp.domain.CalendarRepository;
 import com.bigdecimal.clasnapp.domain.Group;
 import com.bigdecimal.clasnapp.domain.GroupName;
 import com.bigdecimal.clasnapp.domain.GroupRepository;
@@ -32,6 +35,7 @@ public class AdminService {
   private final UserRepository users;
   private final RoleRepository roles;
   private final GroupRepository groups;
+  private final CalendarRepository calendars;
   private final PasswordEncoder passwordEncoder;
   // elevatedRole is {RoleName.MD, RoleName.SUPERVISOR}
   private Boolean userHasElevatedRole = false;
@@ -129,14 +133,16 @@ public class AdminService {
 
   @Transactional
   public User getUserByUsername(String username) {
-    return users
-      .findByUsername(username)
-      .orElseThrow(() ->
-        new EntityNotFoundException(
-          String.format("User [%s] not found.", username)
-        )
-      );
+    return users.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(String.format("User [%s] not found.", username)));
   }
+  
+  // @Transactional
+  // public Calendar createCalendar(CalendarDto calendarDto) {
+  //   String week = calendarDto.year().concat("_"+calendarDto.term()).concat("_"+calendarDto.week());
+  //   Calendar calendar = new Calendar(calendarDto.year(), calendarDto.term(), week);
+  //   calendar.setUser(null);
+  //   return calendars.save(calendar);
+  // }
 
   @Transactional
   public User updateUserByUsername(String username, UserDto userDto) {

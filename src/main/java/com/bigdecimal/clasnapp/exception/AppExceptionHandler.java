@@ -1,5 +1,6 @@
 package com.bigdecimal.clasnapp.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,7 +40,12 @@ public class AppExceptionHandler {
     
     @ExceptionHandler(InvalidUserDetailsException.class)
     public ResponseEntity<?> handleInvalidUserDetailsException(InvalidUserDetailsException iudex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signin failed. [" + iudex.getMessage() + "]");
+    }
+    
+     @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException divex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Signin failed. [" + iudex.getMessage() + "]");
+                .body(divex.getMessage());
     }
 }

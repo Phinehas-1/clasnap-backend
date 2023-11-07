@@ -1,6 +1,7 @@
 package com.bigdecimal.clasnapp.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -10,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,8 +43,8 @@ public class Report {
     @Column(nullable = false)
     private String summary;
 
-    @OneToOne
-    private Attendance attendance;
+    @OneToMany
+    private List<Attendance> attendances;
 
     public Report(User user, String week, String topic, String summary) {
         this.user = user;

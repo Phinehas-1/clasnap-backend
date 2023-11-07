@@ -1,16 +1,16 @@
 package com.bigdecimal.clasnapp.domain;
 
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,17 +26,25 @@ public class Attendance {
   @Column(updatable = false)
   private UUID id;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   private User user;
 
   /* This will be a combination of the term name + week name */
-  @Column(nullable = false)
-  private String week;
+  // @Column(nullable = false)
+  // private String week;
 
-  @ManyToMany
-  private List<Student> students = new ArrayList<Student>();
+  @ManyToOne
+  private Calendar calendar;
 
-  public Attendance(String week) {
-    this.week = week;
+  private Boolean laptop;
+
+  private Long score;
+
+  @ManyToOne
+  private Student student;
+
+  public Attendance(Calendar calendar) {
+    this.calendar = calendar;
   }
 }

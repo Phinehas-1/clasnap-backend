@@ -28,18 +28,11 @@ public class Student {
     @Column(nullable = false)
     private String name;
 
-    private Boolean laptop;
+    // private Boolean laptop;
 
-    private Long score;
+    // private Long score;
 
-    public Student(String name, Boolean laptop) {
+    public Student(String name) {
         this.name = name;
-        this.laptop = laptop;
-    }
-
-    public Student(String name, Boolean laptop, Long score) {
-        this.name = name;
-        this.laptop = laptop;
-        this.score = score;
     }
 }

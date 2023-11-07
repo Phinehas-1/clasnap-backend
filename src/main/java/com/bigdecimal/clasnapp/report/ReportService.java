@@ -3,6 +3,9 @@ package com.bigdecimal.clasnapp.report;
 import com.bigdecimal.clasnapp.domain.Attendance;
 import com.bigdecimal.clasnapp.domain.AttendanceDto;
 import com.bigdecimal.clasnapp.domain.AttendanceRepository;
+import com.bigdecimal.clasnapp.domain.Calendar;
+import com.bigdecimal.clasnapp.domain.CalendarDto;
+import com.bigdecimal.clasnapp.domain.CalendarRepository;
 import com.bigdecimal.clasnapp.domain.Group;
 import com.bigdecimal.clasnapp.domain.Report;
 import com.bigdecimal.clasnapp.domain.ReportDto;
@@ -10,17 +13,17 @@ import com.bigdecimal.clasnapp.domain.ReportRepository;
 import com.bigdecimal.clasnapp.domain.Student;
 import com.bigdecimal.clasnapp.domain.StudentDto;
 import com.bigdecimal.clasnapp.domain.StudentRepository;
+import com.bigdecimal.clasnapp.domain.UpdateAttendanceDto;
 import com.bigdecimal.clasnapp.domain.User;
 import com.bigdecimal.clasnapp.domain.UserRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -37,25 +40,15 @@ public class ReportService {
   private final AttendanceRepository attendances;
   private final StudentRepository students;
   private final UserRepository users;
+  private final CalendarRepository calendars;
 
   @Transactional
   public List<Student> addStudents(List<StudentDto> studentDtos) {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
-
+    User user = getLoggedInUser();
     List<Student> studentList = studentDtos
       .stream()
       .map(studentDto -> {
-        Student student = new Student(
-          studentDto.name(),
-          studentDto.laptop(),
-          studentDto.score()
-        );
+        Student student = new Student(studentDto.name());
         student.setUser(user);
         return student;
       })
@@ -65,13 +58,7 @@ public class ReportService {
 
   @Transactional
   public List<Student> fetchAllStudentsByUser() {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
+    User user = getLoggedInUser();
     return students.findAllByUser(user);
   }
 
@@ -81,55 +68,100 @@ public class ReportService {
   }
 
   @Transactional
-  public Attendance createAttendance(AttendanceDto attendanceDto) {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
-    List<UUID> ids = attendanceDto
-      .studentIds()
-      .stream()
-      .map(studentId -> UUID.fromString(studentId))
-      .toList();
-    List<Student> studentList = new ArrayList<Student>();
-    ids.forEach(id ->
-      studentList.add(
-        students.findById(id).orElseThrow(EntityNotFoundException::new)
-      )
+  public Calendar createCalendar(CalendarDto calendarDto) {
+    User user = getLoggedInUser();
+    String weekName = user.getUsername().concat("_" + calendarDto.week());
+    Calendar calendar = new Calendar(calendarDto.week(), weekName);
+    calendar.setUser(user);
+    return calendars.save(calendar);
+  }
+
+  @Transactional
+  public List<Calendar> fetchAllCalendarsByUser() {
+    User user = getLoggedInUser();
+    return calendars.findByUser(user);
+  }
+
+  @Transactional
+  public List<Calendar> fetchUserCalendarByCreatedAtSorted() {
+    User user = getLoggedInUser();
+    Pageable pageable = PageRequest.of(
+      0,
+      Integer.MAX_VALUE,
+      Direction.DESC,
+      "createdAt"
     );
-    Attendance attendance = new Attendance(attendanceDto.week());
-    attendance.setStudents(studentList);
+    return calendars.findByUser(user, pageable);
+  }
+
+  @Transactional
+  public Attendance createAttendance(AttendanceDto attendanceDto) {
+    User user = getLoggedInUser();
+    Student student = students
+      .findById(UUID.fromString(attendanceDto.studentId()))
+      .orElseThrow(EntityNotFoundException::new);
+    List<Attendance> attendanceList = attendances.findByStudent(student);
+    if (
+      attendanceList
+        .stream()
+        .anyMatch(attendance ->
+          attendance
+            .getCalendar()
+            .getId()
+            .equals(UUID.fromString(attendanceDto.calendarId()))
+        )
+    ) {
+      throw new DataIntegrityViolationException(
+        "Duplicate attendance for the same week not allowed."
+      );
+    }
+    Calendar calendar = calendars
+      .findById(UUID.fromString(attendanceDto.calendarId()))
+      .orElseThrow(EntityNotFoundException::new);
+    Attendance attendance = new Attendance(calendar);
+    attendance.setCalendar(calendar);
+    attendance.setStudent(student);
     attendance.setUser(user);
     return attendances.save(attendance);
   }
 
   @Transactional
-  public List<Attendance> fetchAllAttendancesByUser() {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
-    return attendances.findAllByUser(user);
+  public Attendance updateAttendance(UpdateAttendanceDto updateAttendanceDto) {
+    Attendance attendance = attendances
+      .findById(UUID.fromString(updateAttendanceDto.attendanceId()))
+      .orElseThrow(() ->
+        new EntityNotFoundException("Attendance record doesn't exist")
+      );
+    attendance.setLaptop(updateAttendanceDto.laptop());
+    attendance.setScore(updateAttendanceDto.score());
+    attendances.save(attendance);
+    return attendance;
   }
 
   @Transactional
-  public Report createReport(ReportDto reportDto, String attendanceId) {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
-    Attendance attendance = attendances
-      .findById(UUID.fromString(attendanceId))
-      .orElseThrow(EntityNotFoundException::new);
+  public List<Attendance> fetchAllUserAttendancesByWeek(String calendarId) {
+    User user = getLoggedInUser();
+    List<Attendance> attendanceList = attendances.findAllByUser(user);
+    return attendanceList
+      .stream()
+      .filter(attendance ->
+        calendarId.equals(attendance.getCalendar().getId().toString())
+      )
+      .toList();
+  }
+
+  @Transactional
+  public Report createReport(ReportDto reportDto) {
+    User user = getLoggedInUser();
+    List<Attendance> attendanceList = reportDto
+      .attendanceIds()
+      .stream()
+      .map(attendanceId ->
+        attendances
+          .findById(UUID.fromString(attendanceId))
+          .orElseThrow(EntityNotFoundException::new)
+      )
+      .toList();
     Report report = new Report(
       user,
       reportDto.week(),
@@ -138,19 +170,13 @@ public class ReportService {
     );
     report.setSubmittedOn(Timestamp.from(Instant.now()));
     report.setUser(user);
-    report.setAttendance(attendance);
+    report.setAttendances(attendanceList);
     return reports.save(report);
   }
 
   @Transactional
   public List<Report> fetchAllReportsByUser() {
-    String username = SecurityContextHolder
-      .getContext()
-      .getAuthentication()
-      .getName();
-    User user = users
-      .findByUsername(username)
-      .orElseThrow(EntityNotFoundException::new);
+    User user = getLoggedInUser();
     return reports.findAllByUser(user);
   }
 
@@ -190,6 +216,17 @@ public class ReportService {
       System.currentTimeMillis() - startTime
     );
     return reportList;
+  }
+
+  @Transactional
+  private User getLoggedInUser() {
+    String username = SecurityContextHolder
+      .getContext()
+      .getAuthentication()
+      .getName();
+    return users
+      .findByUsername(username)
+      .orElseThrow(EntityNotFoundException::new);
   }
   // TODO Implement update Attendance, update Report.
 }
