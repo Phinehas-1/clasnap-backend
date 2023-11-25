@@ -1,13 +1,14 @@
 package com.bigdecimal.clasnapp;
 
-import com.bigdecimal.clasnapp.domain.Group;
-import com.bigdecimal.clasnapp.domain.GroupName;
-import com.bigdecimal.clasnapp.domain.GroupRepository;
-import com.bigdecimal.clasnapp.domain.Role;
-import com.bigdecimal.clasnapp.domain.RoleName;
-import com.bigdecimal.clasnapp.domain.RoleRepository;
-import com.bigdecimal.clasnapp.domain.User;
-import com.bigdecimal.clasnapp.domain.UserRepository;
+import com.bigdecimal.clasnapp.domain.group.Group;
+import com.bigdecimal.clasnapp.domain.group.GroupName;
+import com.bigdecimal.clasnapp.domain.group.GroupRepository;
+import com.bigdecimal.clasnapp.domain.role.Role;
+import com.bigdecimal.clasnapp.domain.role.RoleName;
+import com.bigdecimal.clasnapp.domain.role.RoleRepository;
+import com.bigdecimal.clasnapp.domain.user.data.User;
+import com.bigdecimal.clasnapp.domain.user.data.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
